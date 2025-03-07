@@ -1,0 +1,5 @@
+### list local ollama models
+GET http://localhost:11434/api/tags
+
+### check ollama heealth
+GET http://localhost:11434/

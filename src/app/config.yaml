@@ -1,0 +1,2 @@
+default_model: qwen2.5
+ollama_endpoint: http://localhost:11434
