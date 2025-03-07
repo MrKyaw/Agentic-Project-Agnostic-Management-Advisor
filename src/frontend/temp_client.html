@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chatbot with SSE</title>
+</head>
+<body>
+    <h1>Chatbot</h1>
+    <input type="text" id="message" placeholder="Enter your message">
+    <button onclick="sendMessage()">Send</button>
+    <div id="chatbox"></div>
+
+    <script>
+        function sendMessage() {
+            const messageInput = document.getElementById("message");
+            const message = messageInput.value;
+            const chatbox = document.getElementById("chatbox");
+            
+            // Add user message and clear input
+            chatbox.innerHTML += `<p><strong>You:</strong> ${message}</p>`;
+            messageInput.value = '';
+            
+            // Create AI response container
+            const aiPara = document.createElement('p');
+            aiPara.innerHTML = '<strong>AI:</strong> ';
+            const aiText = document.createElement('span');
+            aiPara.appendChild(aiText);
+            chatbox.appendChild(aiPara);
+            
+            // Establish SSE connection
+            const eventSource = new EventSource(
+                `http://127.0.0.1:8000/chat?message=${encodeURIComponent(message)}`
+            );
+
+            eventSource.onmessage = (event) => {
+                try {
+                    const { done, content } = JSON.parse(event.data);
+                    if (!done) {
+                        aiText.textContent += content;
+                        // Auto-scroll to latest message
+                        chatbox.scrollTop = chatbox.scrollHeight;
+                    } else {
+                        eventSource.close();
+                    }
+                } catch (error) {
+                    console.error('Error processing message:', error);
+                    eventSource.close();
+                }
+            };
+
+            eventSource.onerror = () => {
+                aiText.textContent += ' [Connection closed]';
+                eventSource.close();
+            };
+        }
+    </script>
+</body>
+</html>
