@@ -19,8 +19,8 @@
 </head>
 <body>
     <h1>Chatbot</h1>
-    <input type="text" id="message" placeholder="输入消息" autocomplete="off">
-    <button onclick="sendMessage()">发送</button>
+    <input type="text" id="message" placeholder="Enter you message here" autocomplete="off">
+    <button onclick="sendMessage()">Send</button>
     <div id="chatbox"></div>
 
     <script>
@@ -81,8 +81,8 @@
             const messageId = Date.now().toString();
             const html = `
                 <div class="message ${sender}" id="${messageId}">
-                    <strong>${sender === 'user' ? '你' : 'AI'}:</strong>
-                    <span>${text}${isLoading ? ' <span class="loading">(思考中...)</span>' : ''}</span>
+                    <strong>${sender === 'user' ? 'You' : 'AI'}:</strong>
+                    <span>${text}${isLoading ? ' <span class="loading">(Thinking...)</span>' : ''}</span>
                 </div>
             `;
             chatbox.innerHTML += html;
