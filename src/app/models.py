@@ -2,8 +2,9 @@ import uuid
 
 from sqlmodel import SQLModel, Field, Relationship
 from sqlalchemy import JSON
+
 class UserBase(SQLModel):
-    username: str = Field(unique=True)
+    username: str = Field(unique=True, max_length=20)
     is_active: bool = Field(default=True)
     is_admin: bool = Field(default=False)
 
@@ -15,11 +16,18 @@ class User(UserBase, table=True):
 
     chats: list["Chat"] = Relationship(back_populates="owner", cascade_delete=True)
 
+# UserCreate is used to validate user input for db entry creation
 class UserCreate(UserBase):
-    password: str
+    password: str = Field(min_length=8, max_length=40)
 
+# UserRead is used to return user data to the client via API
 class UserRead(UserBase):
     id: uuid.UUID
+
+# UserRegister is used to validate user input for registration via API
+class UserRegister(SQLModel):
+    username: str = Field(max_length=20)
+    password: str = Field(min_length=8, max_length=40)
 
 class ChatBase(SQLModel):
     title: str = Field()
