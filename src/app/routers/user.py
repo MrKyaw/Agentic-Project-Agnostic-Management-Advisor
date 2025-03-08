@@ -13,7 +13,7 @@ import jwt
 from typing import Any
 from datetime import timedelta, datetime, timezone
 
-router = APIRouter(prefix="/users", tags=["users"])
+router = APIRouter(prefix="/user", tags=["user"])
 
 @router.post("/signup", response_model=UserRead)
 def register_user(session: SessionDep, user_in: UserRegister) -> User:
