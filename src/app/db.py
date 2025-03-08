@@ -17,7 +17,10 @@ def init_db(session: Session):
             username=settings.FIRST_SUPERUSER_USERNAME, 
             password=settings.FIRST_SUPERUSER_PASSWORD,
         )
-        user = create_user(session, user_in)
+        user = create_user(
+            session=session,
+            user_create=user_in,
+            )
 
 def create_user(*, session: Session, user_create: UserCreate) -> User:
     db_obj = User.model_validate(
