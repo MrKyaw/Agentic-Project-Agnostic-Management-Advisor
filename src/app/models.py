@@ -19,7 +19,7 @@ class UserCreate(UserBase):
     password: str
 
 class UserRead(UserBase):
-    id: int
+    id: uuid.UUID
 
 class ChatBase(SQLModel):
     title: str = Field()
