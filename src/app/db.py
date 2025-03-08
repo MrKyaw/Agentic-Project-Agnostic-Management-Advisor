@@ -14,8 +14,9 @@ def init_db(session: Session):
 
     if not user:
         user_in = UserCreate(
-            username=settings.FIRST_SUPERUSER_USERNAME, 
+            username=settings.FIRST_SUPERUSER_USERNAME,
             password=settings.FIRST_SUPERUSER_PASSWORD,
+            is_admin=True,
         )
         user = create_user(
             session=session,
@@ -31,3 +32,5 @@ def create_user(*, session: Session, user_create: UserCreate) -> User:
     session.refresh(db_obj)
     return db_obj
 
+def get_user_by_username(*, session: Session, username: str) -> User | None:
+    return session.exec(select(User).where(User.username == username)).first()
