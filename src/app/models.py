@@ -50,6 +50,14 @@ class Chat(ChatBase, table=True):
 class ChatCreate(ChatBase):
     pass
 
+class ChatRead(ChatBase):
+    id: uuid.UUID
+    owner_id: uuid.UUID
+
+class ChatsRead(SQLModel):
+    chats: list[ChatRead]
+    count: int
+
 # JSON payload containing access token
 class Token(SQLModel):
     access_token: str
