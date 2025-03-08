@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException
 # from fastapi.security import OAuth2PasswordBearer
 from typing import Dict, Any
-from internal.config_manager import load_config, update_config
+from app.services.siteconf_manager import load_config, update_config
 
 
 router = APIRouter()

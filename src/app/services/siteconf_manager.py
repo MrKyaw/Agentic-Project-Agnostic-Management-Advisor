@@ -2,7 +2,7 @@ from pathlib import Path
 import yaml
 from typing import Dict, Any
 
-CONFIG_PATH = Path(__file__).parent.parent / "config.yaml"
+CONFIG_PATH = Path(__file__).parent.parent / "site.yaml"
 DEFAULT_CONFIG = {
     "ollama_endpoint": "http://localhost:11434",
     "default_model": "qwen2.5",

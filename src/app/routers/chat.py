@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Request
 from fastapi.responses import StreamingResponse
-from internal.ollama_manager import generate_chat_stream
+from app.services.ollama_manager import generate_chat_stream
 from pydantic import BaseModel
 
 # ephemeral context for current user

@@ -1,6 +1,7 @@
-from fastapi import FastAPI
+from fastapi import FastAPI, APIRouter
 from fastapi.middleware.cors import CORSMiddleware
-from routers import config, chat
+from app.routers import chat, siteconf
+from app.settings import settings
 
 app = FastAPI()
 
@@ -14,5 +15,7 @@ app.add_middleware(
 )
 
 # Include routers
-app.include_router(config.router)
-app.include_router(chat.router)
+api_router = APIRouter()
+api_router.include_router(siteconf.router)
+api_router.include_router(chat.router)
+app.include_router(api_router, prefix=settings.API_V1_STR)
