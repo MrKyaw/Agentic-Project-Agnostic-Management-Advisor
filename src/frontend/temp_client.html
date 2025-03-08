@@ -2,56 +2,106 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Chatbot with SSE</title>
+    <title>Chatbot with Streaming</title>
+    <style>
+        #chatbox {
+            height: 400px;
+            overflow-y: auto;
+            border: 1px solid #ccc;
+            padding: 10px;
+            margin: 10px 0;
+        }
+        .message { margin: 5px 0; }
+        .user { color: blue; }
+        .ai { color: green; }
+        .loading { color: #666; font-style: italic; }
+    </style>
 </head>
 <body>
     <h1>Chatbot</h1>
-    <input type="text" id="message" placeholder="Enter your message">
-    <button onclick="sendMessage()">Send</button>
+    <input type="text" id="message" placeholder="输入消息" autocomplete="off">
+    <button onclick="sendMessage()">发送</button>
     <div id="chatbox"></div>
 
     <script>
-        function sendMessage() {
+        async function sendMessage() {
             const messageInput = document.getElementById("message");
-            const message = messageInput.value;
+            const message = messageInput.value.trim();
+            if (!message) return;
+
             const chatbox = document.getElementById("chatbox");
             
-            // Add user message and clear input
-            chatbox.innerHTML += `<p><strong>You:</strong> ${message}</p>`;
+            // 添加用户消息
+            addMessage('user', message);
             messageInput.value = '';
             
-            // Create AI response container
-            const aiPara = document.createElement('p');
-            aiPara.innerHTML = '<strong>AI:</strong> ';
-            const aiText = document.createElement('span');
-            aiPara.appendChild(aiText);
-            chatbox.appendChild(aiPara);
-            
-            // Establish SSE connection
-            const eventSource = new EventSource(
-                `http://127.0.0.1:8000/chat?message=${encodeURIComponent(message)}`
-            );
+            // 创建AI响应占位符
+            const aiMessageId = addMessage('ai', '', true);
 
-            eventSource.onmessage = (event) => {
-                try {
-                    const { done, content } = JSON.parse(event.data);
-                    if (!done) {
-                        aiText.textContent += content;
-                        // Auto-scroll to latest message
-                        chatbox.scrollTop = chatbox.scrollHeight;
-                    } else {
-                        eventSource.close();
-                    }
-                } catch (error) {
-                    console.error('Error processing message:', error);
-                    eventSource.close();
+            try {
+                const response = await fetch('http://127.0.0.1:8000/chat', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ message }),
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP 错误 ${response.status}`);
                 }
-            };
 
-            eventSource.onerror = () => {
-                aiText.textContent += ' [Connection closed]';
-                eventSource.close();
-            };
+                // 流式读取数据
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let aiResponse = '';
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    // 解析数据块（假设服务端返回纯文本流）
+                    const chunk = decoder.decode(value, { stream: true });
+                    aiResponse += chunk;
+                    
+                    // 更新UI
+                    updateAIMessage(aiMessageId, aiResponse);
+                }
+
+                // 最终更新一次确保完整
+                updateAIMessage(aiMessageId, aiResponse);
+            } catch (error) {
+                updateAIMessage(aiMessageId, `错误: ${error.message}`);
+                console.error('请求失败:', error);
+            }
+        }
+
+        // 添加消息到聊天框（返回消息ID）
+        function addMessage(sender, text, isLoading = false) {
+            const messageId = Date.now().toString();
+            const html = `
+                <div class="message ${sender}" id="${messageId}">
+                    <strong>${sender === 'user' ? '你' : 'AI'}:</strong>
+                    <span>${text}${isLoading ? ' <span class="loading">(思考中...)</span>' : ''}</span>
+                </div>
+            `;
+            chatbox.innerHTML += html;
+            chatbox.scrollTop = chatbox.scrollHeight;
+            return messageId;
+        }
+
+        // 更新AI消息内容
+        function updateAIMessage(messageId, newText) {
+            const messageDiv = document.getElementById(messageId);
+            if (!messageDiv) return;
+
+            const textSpan = messageDiv.querySelector('span');
+            const loadingSpan = messageDiv.querySelector('.loading');
+            
+            if (loadingSpan) loadingSpan.remove();
+            textSpan.textContent = newText;
+            
+            chatbox.scrollTop = chatbox.scrollHeight;
         }
     </script>
 </body>

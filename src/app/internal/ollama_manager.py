@@ -1,7 +1,6 @@
 from fastapi.responses import StreamingResponse
 from .config_manager import load_config
 from ollama import AsyncClient
-import json
 
 config = load_config()
 OLLAMA_ENDPOINT, DEFAULT_MODEL = config["ollama_endpoint"], config["default_model"]
@@ -19,11 +18,6 @@ async def generate_chat_stream(message: str, context: list):
         stream=True,
     )
     async for chunk in await stream:
-        cleaned_data = {
-            "done": chunk.done,
-            "content": chunk.message.content,
-        }
-        yield f"data: {json.dumps(cleaned_data)}\n\n"
+        yield chunk.message.content
         context.append(chunk.message)
     return
-
