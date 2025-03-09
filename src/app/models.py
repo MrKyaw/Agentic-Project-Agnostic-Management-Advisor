@@ -2,6 +2,7 @@ import uuid
 
 from sqlmodel import SQLModel, Field, Relationship
 from sqlalchemy import JSON
+from typing import Optional
 
 class UserBase(SQLModel):
     username: str = Field(unique=True, max_length=20)
@@ -30,25 +31,22 @@ class UserRegister(SQLModel):
     password: str = Field(min_length=8, max_length=40)
 
 class ChatBase(SQLModel):
-    title: str = Field()
+    title: Optional[str] = Field(default=None)
     context: list[str] = Field(default_factory=list, sa_type=JSON)
+    
 
 class Chat(ChatBase, table=True):
     __tablename__ = "chats"
 
     id: uuid.UUID = Field(default_factory=uuid.uuid4, primary_key=True)
-    title: str = Field(default=None)
     owner_id: uuid.UUID = Field(foreign_key="users.id")
 
     owner: User = Relationship(back_populates="chats")
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        if self.title is None:
-            self.title = f"Chat-{self.id.hex[:8]}"
 
 class ChatCreate(ChatBase):
-    pass
+    owner_id: uuid.UUID
+
 
 class ChatRead(ChatBase):
     id: uuid.UUID
