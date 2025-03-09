@@ -1,6 +1,7 @@
 from app.settings import settings
 from sqlmodel import create_engine, SQLModel, Session, select
-from app.models import User, UserCreate
+from app.models import User, UserCreate, Chat, ChatCreate
+import uuid
 
 engine = create_engine(str(settings.SQLALCHEMY_DATABASE_URI))
 
@@ -34,3 +35,13 @@ def create_user(*, session: Session, user_create: UserCreate) -> User:
 
 def get_user_by_username(*, session: Session, username: str) -> User | None:
     return session.exec(select(User).where(User.username == username)).first()
+
+def create_chat(*, session: Session, chat_create: ChatCreate) -> Chat:
+    db_obj = Chat.model_validate(chat_create)
+    session.add(db_obj)
+    session.commit()
+    session.refresh(db_obj)
+    return db_obj
+
+def get_chat_by_id(*, session: Session, chat_id: uuid.UUID) -> Chat | None:
+    return session.exec(select(Chat).where(Chat.id == chat_id)).first()
