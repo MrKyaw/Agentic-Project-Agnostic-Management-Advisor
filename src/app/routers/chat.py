@@ -1,7 +1,6 @@
 from fastapi import APIRouter, Request, Body
 from fastapi.responses import StreamingResponse
 from fastapi.exceptions import HTTPException
-from app.services.ollama_manager import generate_chat_stream
 from pydantic import BaseModel
 from app.dependencies import SessionDep, CurrentUser
 from app.models import Chat, ChatsRead, ChatCreate, ChatRead
@@ -9,10 +8,15 @@ from sqlmodel import select, func
 from app import db
 import uuid
 
-# ephemeral context for current user
-# TODO: store this in a database
-context = []
 
+from app.services.siteconf_manager import load_config
+from ollama import AsyncClient
+
+config = load_config()
+OLLAMA_ENDPOINT, DEFAULT_MODEL = config["ollama_endpoint"], config["default_model"]
+client = AsyncClient(
+    host=OLLAMA_ENDPOINT,
+)
 
 
 router = APIRouter(prefix="/chat", tags=["chat"])
@@ -59,21 +63,44 @@ async def create_chat(
     )
     return chat
 
+class MessageRequest(BaseModel):
+    message: str
+
 @router.post("/{chat_id}")
 async def send_message(
     session: SessionDep,
     current_user: CurrentUser,
 
     chat_id: uuid.UUID,
-    request: BaseModel = Body(..., example={"message": "Hello"}),
+    request: MessageRequest,
 ):
     """Chat with the Ollama model and return the response as a Server-Sent Event."""
-    chat = db.get_chat_by_id(session=session, chat_id=chat_id)
+    # load chat from db
+    # chat = db.get_chat_by_id(session=session, chat_id=chat_id)
+    chat = session.exec(select(Chat).where(Chat.id == chat_id)).first()
     if not chat or chat.owner != current_user:
-        raise HTTPException(status_code=403, detail="Forbidden")
+        raise HTTPException(status_code=403, detail=f"You do not have permission to access chat-{chat_id}")
+
+    # append user message to context
+    chat.title = request.message[:150]
+    chat.context.append({'role': 'user', 'content': request.message})
+
+    async def generate_chat_wrapper():
+        """Chat with the Ollama model and return the response as a Server-Sent Event."""
+        stream = client.chat(
+            model=DEFAULT_MODEL,
+            messages=chat.context,
+            stream=True,
+        )
+        async for chunk in await stream:
+            yield chunk.message.content
+            chat.context.append(chunk.message)
+        return
+
+
 
     return StreamingResponse(
-        generate_chat_stream(request.message, context),
+        generate_chat_wrapper(),
         media_type="text/event-stream",
         headers={
             "Cache-Control": "no-cache",
