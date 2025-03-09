@@ -32,6 +32,7 @@ class UserRegister(SQLModel):
 
 class ChatBase(SQLModel):
     title: Optional[str] = Field(default=None)
+    # TODO: is the json array cleaned or validated before storing?
     context: list[str] = Field(default_factory=list, sa_type=JSON)
     
 
