@@ -72,7 +72,7 @@ async def send_message(
     current_user: CurrentUser,
 
     chat_id: uuid.UUID,
-    request: MessageRequest,
+    request: MessageRequest = Body(..., example={"message": "Hello"}),
 ):
     """Chat with the Ollama model and return the response as a Server-Sent Event."""
     # load chat from db
