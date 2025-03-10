@@ -7,6 +7,7 @@ from app.models import Chat, ChatsRead, ChatCreate, ChatRead
 from sqlmodel import select, func
 from app import db
 import uuid
+from app.logger import logger
 
 
 from app.services.siteconf_manager import load_config
@@ -82,7 +83,8 @@ async def send_message(
         raise HTTPException(status_code=403, detail=f"You do not have permission to access chat-{chat_id}")
 
     # append user message to context
-    chat.title = request.message[:150]
+    if chat.title is None:
+        chat.title = request.message[:150]
     chat.context.append({'role': 'user', 'content': request.message})
 
     async def generate_chat_wrapper():
@@ -92,9 +94,17 @@ async def send_message(
             messages=chat.context,
             stream=True,
         )
+
+        full_response = ""
         async for chunk in await stream:
+            full_response += chunk.message.content
             yield chunk.message.content
-            chat.context.append(chunk.message)
+        chat.context.append({"role":"assistant", "content":full_response})
+        session.add(chat)
+        session.commit()
+        session.refresh(chat)
+        logger.debug(chat.context)
+
         return
 
 
