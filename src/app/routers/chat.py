@@ -5,6 +5,7 @@ from pydantic import BaseModel
 from app.dependencies import SessionDep, CurrentUser
 from app.models import Chat, ChatsRead, ChatCreate, ChatRead
 from sqlmodel import select, func
+from sqlalchemy.orm.attributes import flag_modified
 from app import db
 import uuid
 from app.logger import logger
@@ -139,10 +140,11 @@ def send_message(
         raise HTTPException(status_code=403, detail=f"You do not have permission to access chat-{chat_id}")
     
     if not chat.context or chat.context[-1]['role'] != 'user':
-        chat.context = chat.context + [{'role': 'user', 'content': request.message}]
+        chat.context.append({'role': 'user', 'content': request.message})
     else:
-        chat.context[-1] = [{'role': 'user', 'content': request.message}]
-        chat.context = chat.context[:]
+        chat.context[-1] = {'role': 'user', 'content': request.message}
+    flag_modified(chat, "context")
+
     session.commit()
 
     def generate_chat_wrapper():
@@ -163,7 +165,8 @@ def send_message(
             if chat.title is None:
                 chat.title = full_response[:150]
 
-            chat.context = chat.context + [{"role":"assistant", "content":full_response}]
+            chat.context.append({"role":"assistant", "content":full_response})
+            flag_modified(chat, "context")
             logger.debug(chat.context)
             inner_session.commit()
             logger.debug(chat.context)
