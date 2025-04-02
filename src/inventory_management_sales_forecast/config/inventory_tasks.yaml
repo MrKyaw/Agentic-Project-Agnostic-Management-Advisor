@@ -1,0 +1,119 @@
+inventory_planning:
+  description: |
+    Create inventory plan for {product} using:
+    - Stock data: {stock_levels}
+    - Supplier info: {supplier_data}
+    
+    Required format:
+    ```json
+    {{
+      "product": "SKU-123",
+      "order_quantity": 100,
+      "reorder_point": 50,
+      "supplier": "Supplier Name"
+    }}
+    ```
+  expected_output: Valid JSON matching exact format
+  # description: |
+  #   Create inventory plan for {product} considering:
+  #   - Current stock: {stock_levels}
+  #   - Supplier data: {supplier_data}
+  #   - Historical sales: {historical_sales}
+    
+  #   Required JSON format:
+  #   {{
+  #     "product": "string",
+  #     "order_quantity": "integer",
+  #     "reorder_point": "integer",
+  #     "supplier": "string"
+  #   }}
+  # expected_output: Valid JSON matching the required format
+
+  # description: >
+  #   Analyze current inventory levels and future demand to create a 
+  #   replenishment plan for {product}. Consider factors like lead times, 
+  #   safety stock, and demand variability.
+  # expected_output: >
+  #   Detailed inventory plan including order quantities, timing, and
+  #   supplier recommendations for {product}
+
+inventory_analysis:
+  description: >
+    Analyze current stock levels and historical demand patterns to:
+    - Calculate optimal reorder points
+    - Identify slow-moving items
+    - Highlight potential stockouts
+    - Evaluate warehouse space utilization
+    
+    Key Data Sources:
+    - Current Stock Levels: {stock_levels}
+    - Supplier Lead Times: {supplier_data}
+    - Product Demand History: {product_demand}
+    
+    Our Inventory Parameters:
+    - Safety Stock Level: 15% of monthly demand
+    - Maximum Stock Threshold: 120% of warehouse capacity
+    - Target Service Level: 95%
+  expected_output: >
+    Inventory analysis report containing:
+    - Reorder recommendations with quantities
+    - Slow-moving item alerts
+    - Stockout risk assessment
+    - Warehouse space optimization suggestions
+
+supplier_performance_evaluation:
+  description: >
+    Evaluate supplier performance based on:
+    - Delivery timeliness (actual vs promised)
+    - Order accuracy
+    - Quality compliance
+    - Cost variance
+    
+    Use data from: {supplier_data}
+    
+    Rating Scale:
+    - 90-100: Excellent
+    - 75-89: Good
+    - 60-74: Needs Improvement
+    - Below 60: Critical
+  expected_output: >
+    Supplier performance scorecard with:
+    - Quantitative ratings per supplier
+    - Key improvement areas
+    - Recommended action items
+
+stock_optimization:
+  description: >
+    Develop inventory optimization strategy considering:
+    - ABC analysis of product categories
+    - Seasonal demand patterns
+    - Promotional calendar
+    - Supplier constraints
+    
+    Optimization Goals:
+    - Reduce carrying costs by 15%
+    - Maintain 98% order fulfillment rate
+    - Minimize dead stock
+  expected_output: >
+    Optimization plan containing:
+    - ABC classification matrix
+    - Seasonality-adjusted stock levels
+    - Promotional stock requirements
+    - Dead stock reduction strategy
+
+inventory_health_scoring:
+  description: >
+    Calculate inventory health scores (0-100) using:
+    - Turnover rates
+    - Shelf life metrics
+    - Demand variability
+    - Storage costs
+    
+    Scoring Formula:
+    Health Score = (Turnover * 0.4) + (ShelfLife * 0.3) + 
+                   (DemandStability * 0.2) - (StorageCost * 0.1)
+  expected_output: >
+    Inventory health dashboard showing:
+    - Per-SKU health scores
+    - Priority items needing attention
+    - Trend analysis vs previous periods

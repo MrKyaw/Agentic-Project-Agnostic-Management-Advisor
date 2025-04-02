@@ -19,7 +19,7 @@ class User(UserBase, table=True):
 
 # UserCreate is used to validate user input for db entry creation
 class UserCreate(UserBase):
-    password: str = Field(min_length=8, max_length=40)
+    password: str = Field(min_length=5, max_length=40)
 
 # UserRead is used to return user data to the client via API
 class UserRead(UserBase):
@@ -28,7 +28,7 @@ class UserRead(UserBase):
 # UserRegister is used to validate user input for registration via API
 class UserRegister(SQLModel):
     username: str = Field(max_length=20)
-    password: str = Field(min_length=8, max_length=40)
+    password: str = Field(min_length=5, max_length=40)
 
 class ChatBase(SQLModel):
     title: Optional[str] = Field(default=None)

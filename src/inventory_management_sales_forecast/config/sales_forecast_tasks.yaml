@@ -1,0 +1,94 @@
+demand_forecasting:
+  description: >
+    Generate 90-day sales forecast using:
+    - Historical sales data: {historical_sales}
+    - Market trends: {market_trends}
+    - Promotional calendar: {promotional_data}
+    - Seasonality factors
+    
+    Model Requirements:
+    - Confidence intervals for predictions
+    - Weekly breakdowns
+    - New product launch adjustments
+
+  expected_output: >
+    Forecast report containing:
+    - Daily/weekly demand predictions
+    - Key driving factors analysis
+    - Risk assessment for variations
+
+sales_trend_analysis:
+  description: >
+    Identify and analyze sales trends considering:
+    - Regional performance variations
+    - Channel effectiveness (online vs retail)
+    - Product category mix
+    - Customer segmentation
+    
+    Trend Parameters:
+    - Minimum 8-week trend duration
+    - Minimum 15% change magnitude
+    - Statistical significance (p < 0.05)
+
+  expected_output: >
+    Trend analysis report with:
+    - Verified significant trends
+    - Impact assessment
+    - Recommended response strategies
+
+forecast_validation:
+  description: >
+    Validate previous forecasts against actual sales:
+    - Calculate forecast accuracy (MAPE)
+    - Identify systematic errors
+    - Analyze variance causes
+    - Adjust model parameters
+    
+    Validation Criteria:
+    - Acceptable MAPE: < 20%
+    - Significant variance threshold: > 25%
+    - Model retraining trigger: 3 consecutive misses
+
+  expected_output: >
+    Validation report containing:
+    - Accuracy metrics
+    - Error pattern analysis
+    - Model adjustment recommendations
+    - Lessons learned for future forecasts
+
+sales_potential_scoring:
+  description: >
+    Calculate sales potential scores (0-100) using:
+    - Market size estimates
+    - Competitive landscape
+    - Historical growth rates
+    - Resource allocation
+    
+    Scoring Matrix:
+    Score = (MarketSize * 0.3) + (GrowthRate * 0.4) + 
+            (Competition * -0.2) + (Resources * 0.1)
+
+  expected_output: >
+    Sales potential scorecard with:
+    - Per-product/region scores
+    - Opportunity prioritization
+    - Resource allocation recommendations
+
+promotional_impact_analysis:
+  description: >
+    Analyze effectiveness of past promotions:
+    - Lift vs baseline sales
+    - Cannibalization effects
+    - Customer acquisition costs
+    - Long-term value impact
+    
+    Key Metrics:
+    - Incremental ROI
+    - New customer percentage
+    - Repeat purchase rate
+
+  expected_output: >
+    Promotional analysis report showing:
+    - Campaign performance rankings
+    - Best/worst performing tactics
+    - Optimization recommendations

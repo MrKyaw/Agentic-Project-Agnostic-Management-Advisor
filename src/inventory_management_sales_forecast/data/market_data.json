@@ -1,0 +1,14 @@
+{
+  "market_trends": [
+    {
+      "trend_id": "MT-2024",
+      "category": "Consumer Electronics",
+      "timestamp": "2024-03-01",
+      "trend_score": 78,
+      "keywords": [
+        "wearables",
+        "smart home"
+      ]
+    }
+  ]
+}
