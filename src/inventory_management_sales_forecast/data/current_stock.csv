@@ -1,0 +1,6 @@
+SKU,Product_Name,Current_Stock,Reorder_Level,Warehouse_Location
+ELEC-1001,Smartphone X12,150,200,WAREHOUSE-A
+ELEC-1002,"4K Smart TV 55""",75,50,WAREHOUSE-B
+ELEC-1003,Wireless Headphones Pro,300,150,WAREHOUSE-C
+ELEC-1004,Laptop Ultrabook V7,45,100,WAREHOUSE-A
+ELEC-1005,Smart Watch Series 9,180,250,WAREHOUSE-B

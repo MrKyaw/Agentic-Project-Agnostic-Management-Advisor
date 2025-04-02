@@ -1,0 +1,2 @@
+default_model: llama3.2
+ollama_endpoint: http://localhost:11434

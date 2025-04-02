@@ -1,0 +1,18 @@
+{
+  "suppliers": [
+    {
+      "supplier_id": "SUP-2024",
+      "name": "Global Electronics Inc.",
+      "lead_times": {
+        "standard": 14,
+        "express": 7
+      },
+      "performance_rating": 92,
+      "products_supplied": [
+        "ELEC-1001",
+        "ELEC-1003",
+        "ELEC-1005"
+      ]
+    }
+  ]
+}
