@@ -359,3 +359,8 @@ See `src/readme.md` for the original environment setup.
 ## License
 
 MIT — see [license.txt](license.txt).
+
+
+⭐ Star this repo if you find it useful!
+
+Report Bug · Request Feature · Ask Question
