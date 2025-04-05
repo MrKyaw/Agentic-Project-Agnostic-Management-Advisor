@@ -276,7 +276,7 @@ directives are used in the runtime package.
 
 ## Engineering decisions
 
-- **Standard library only.** A recruiter or reviewer can run the engine with a
+- **Standard library only.** A reviewer or reviewer can run the engine with a
   stock Python interpreter. No install, API key, model download, or database.
 - **Deterministic before stochastic.** Topological ties break on task ID, member
   ties break on member ID, and Monte Carlo uses an explicit seed. Identical input
@@ -320,7 +320,7 @@ directives are used in the runtime package.
   `(optimistic, pessimistic, most likely)`; this is transparent but not a
   substitute for calibrated historical data.
 
-## Recruiter snapshot
+## Reviewer snapshot
 
 **Who this is for:** project/programme management, technical program management,
 platform engineering, and applied-AI roles where planning rigour matters.

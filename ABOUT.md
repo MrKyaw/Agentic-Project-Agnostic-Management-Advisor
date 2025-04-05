@@ -30,7 +30,7 @@ forecasts, and executive Markdown/JSON output.
 
 ## Audience
 
-Recruiters and hiring managers evaluating project/programme management,
+Reviewers and hiring managers evaluating project/programme management,
 technical program management, platform engineering, or applied-AI engineering
 work; engineers who want a small, auditable planning library; and anyone tired
 of unverifiable AI-generated project plans.

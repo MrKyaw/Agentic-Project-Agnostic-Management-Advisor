@@ -144,7 +144,7 @@ but must tolerate additive fields in future minor versions.
 
 ## ADR-010 — Validation and CLI errors are data, not tracebacks
 
-**Context.** Recruiters and users will try malformed files.
+**Context.** Reviewers and users will try malformed files.
 
 **Decision.** Distinguish `InputError` (shape/parameter) from `ValidationError`
 (planning invariant). Both produce `error: ...` on stderr and exit code `2`.
